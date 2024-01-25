@@ -68,7 +68,7 @@ public abstract class ChunkPacketBlockControllerAntiXray implements ChunkPacketB
 
         Block.BLOCK_STATE_REGISTRY.iterator().forEachRemaining((blockState) -> {
                     solidGlobal.put(blockState, blockState.isRedstoneConductor(emptyChunk, BlockPos.ZERO)
-                            && !blockState.canOcclude()
+                            && blockState.canOcclude()
                             && blockState.getBlock() != Blocks.SPAWNER && blockState.getBlock() != Blocks.BARRIER
                             && blockState.getBlock() != Blocks.SHULKER_BOX && blockState.getBlock() != Blocks.SLIME_BLOCK
                             && blockState.getBlock() != Blocks.MANGROVE_ROOTS
