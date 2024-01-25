@@ -67,11 +67,16 @@ public abstract class ChunkPacketBlockControllerAntiXray implements ChunkPacketB
         EmptyLevelChunk emptyChunk = new EmptyLevelChunk(level, new ChunkPos(0, 0), level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS));
 
         Block.BLOCK_STATE_REGISTRY.iterator().forEachRemaining((blockState) -> {
-                solidGlobal.put(blockState, blockState.isRedstoneConductor(emptyChunk, BlockPos.ZERO)
-                    && blockState.getBlock() != Blocks.SPAWNER && blockState.getBlock() != Blocks.BARRIER && blockState.getBlock() != Blocks.SHULKER_BOX && blockState.getBlock() != Blocks.SLIME_BLOCK && blockState.getBlock() != Blocks.MANGROVE_ROOTS || lavaObscures && blockState == Blocks.LAVA.defaultBlockState());
-                // Comparing blockState == Blocks.LAVA.defaultBlockState() instead of blockState.getBlock() == Blocks.LAVA ensures that only "stationary lava" is used
-                // shulker box checks TE.
-            }
+                    solidGlobal.put(blockState, blockState.isRedstoneConductor(emptyChunk, BlockPos.ZERO)
+                            && !blockState.canOcclude()
+                            && blockState.getBlock() != Blocks.SPAWNER && blockState.getBlock() != Blocks.BARRIER
+                            && blockState.getBlock() != Blocks.SHULKER_BOX && blockState.getBlock() != Blocks.SLIME_BLOCK
+                            && blockState.getBlock() != Blocks.MANGROVE_ROOTS
+
+                            || lavaObscures && blockState == Blocks.LAVA.defaultBlockState());
+                    // Comparing blockState == Blocks.LAVA.defaultBlockState() instead of blockState.getBlock() == Blocks.LAVA ensures that only "stationary lava" is used
+                    // shulker box checks TE.
+                }
         );
 
         this.maxBlockHeightUpdatePosition = maxBlockHeight + updateRadius - 1;
